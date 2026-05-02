@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String      @id @default(cuid())
+  name        String      @default("Player")
+  isPenalized Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  lastLogin   DateTime    @default(now())
+  stats       PlayerStat?
+  tasks       Task[]
+  goals       Goal[]
+}
+
+model PlayerStat {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  level     Int      @default(1)
+  rank      String   @default("E") // E, D, C, B, A, S
+  xp        Int      @default(0)
+  str       Int      @default(10)
+  int       Int      @default(10)
+  wis       Int      @default(10)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  content       String
+  description   String?   // Plain English description of the task
+  status        String    @default("PENDING") // PENDING, COMPLETED, FAILED
+  type          String    @default("MAIN") // MAIN, DAILY, PENALTY
+  priority      Int       @default(1) // 1-5
+  severity      Int       @default(1) // 1-5
+  statAlignment String?   // STR, INT, WIS
+  xpReward      Int       @default(0)
+  difficulty    String    @default("MODERATE") // EASY, MODERATE, HARD
+  category      String    @default("PERSONAL") // WORK, HEALTH, LEARNING, PERSONAL, FINANCE, CREATIVE
+  verifiedAt    DateTime? // null = not verified yet
+  proofType     String?   // TRIVIA, PHOTO, REFLECTION, GIT_LINK
+  proofData     String?   // trivia answer, photo path, reflection text, git URL
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Goal {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  content   String
+  slot      Int      @default(1) // 1-5 to represent the 5 goal fields
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
