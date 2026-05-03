@@ -58,3 +58,12 @@ training_debug.log
 
 # compiled caches
 /unsloth_compiled_cache/
+
+# user-uploaded proof photos (may contain personal images)
+public/proofs/
+
+# test/scratch scripts
+test_*.js
+test_*.mjs
+fix_key.sh
+nuloop
