@@ -1,4 +1,10 @@
-const GROQ_KEY = "REDACTED_KEY";
+import "dotenv/config";
+
+const GROQ_KEY = process.env.GROQ_API_KEY;
+if (!GROQ_KEY) {
+  console.error("❌ GROQ_API_KEY is required in .env");
+  process.exit(1);
+}
 
 const prompt = `Generate a JSON array of 3 productivity tasks. Each must have: cleanTitle (2-6 words), actionableTask (1 sentence), category (one of WORK, HEALTH, LEARNING), statAlignment (one of STR, INT, WIS), priority (1-5), severity (1-5), difficulty (one of EASY, MODERATE, HARD). Return ONLY a valid JSON array.`;
 
